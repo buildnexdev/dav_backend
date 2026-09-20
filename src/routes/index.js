@@ -1,0 +1,40 @@
+import { Router } from 'express';
+import healthRoutes from './health.routes.js';
+import chatRoutes from './chat.routes.js';
+import contactRoutes from './contact.routes.js';
+import authRoutes from './auth.routes.js';
+import studentRoutes from './student.routes.js';
+import mentorRoutes from './mentor.routes.js';
+import academicRoutes from './academic.routes.js';
+import attendanceRoutes from './attendance.routes.js';
+import alumniRoutes from './alumni.routes.js';
+import galleryRoutes from './gallery.routes.js';
+import newsRoutes from './news.routes.js';
+import notificationRoutes from './notification.routes.js';
+import paymentRoutes from './payment.routes.js';
+import dashboardRoutes from './dashboard.routes.js';
+import reportsRoutes from './reports.routes.js';
+import settingsRoutes from './settings.routes.js';
+import publicRoutes from './public.routes.js';
+
+const router = Router();
+
+router.use('/health', healthRoutes);
+router.use('/auth', authRoutes);
+router.use('/students', studentRoutes);
+router.use('/mentors', mentorRoutes);
+router.use('/academics', academicRoutes);
+router.use('/attendance', attendanceRoutes);
+router.use('/alumni', alumniRoutes);
+router.use('/gallery', galleryRoutes);
+router.use('/news', newsRoutes);
+router.use('/notifications', notificationRoutes);
+router.use('/payments', paymentRoutes);
+router.use('/dashboard', dashboardRoutes);
+router.use('/reports', reportsRoutes);
+router.use('/settings', settingsRoutes);
+router.use('/public', publicRoutes);
+router.use('/chat', chatRoutes);
+router.use('/contact', contactRoutes);
+
+export default router;
