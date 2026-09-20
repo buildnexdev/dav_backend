@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nandha Kumar | Software Developer</title>
+    <meta name="description"
+        content="Portfolio of Nandha Kumar, a Software Developer specializing in React, React Native, TypeScript, PHP, MySQL, and web and mobile application development.">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="media.css">
+    <link rel="stylesheet" href="chatbot.css">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="Assets/profile.jpg" type="image/jpeg">
+</head>
+
+<body>
+    <!-- Page Loader -->
+    <div id="page-loader" aria-live="polite" aria-busy="true">
+        <div class="loader-brand">Nandha<span>.</span></div>
+        <div class="loader-ring" role="status" aria-label="Loading"></div>
+        <p class="loader-text">Loading portfolio</p>
+    </div>
+
+    <!-- Scroll Progress Bar -->
+    <div id="scroll-progress"></div>
+
+    <!-- Desktop Cursor Glow -->
+    <div id="cursor-glow"></div>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" aria-label="Back to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- Header Section -->
+    <header class="header intro-reveal" id="header">
+        <div class="container nav-container">
+            <a href="#home" class="logo">Nandha<span class="logo-dot">.</span></a>
+
+            <nav class="main-nav" id="main-nav">
+                <a href="#home" class="nav-links active">Home</a>
+                <a href="#about" class="nav-links">About</a>
+                <a href="#experience" class="nav-links">Experience</a>
+                <a href="#skills" class="nav-links">Skills</a>
+                <a href="#projects" class="nav-links">Projects</a>
+                <a href="#contact" class="nav-links">Contact</a>
+
+                <div class="nav-actions">
+                    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"
+                        title="Toggle Theme">
+                        <img src="Assets/sun.png" alt="" id="theme-icon" />
+                    </button>
+                    <a href="Assets/Nandhakumar_Resume.pdf" download class="btn btn-primary btn-sm">Resume</a>
+                </div>
+            </nav>
+
+            <div class="hamburger" id="hamburger" aria-label="Open menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="hero">
+            <div class="container hero-container">
+                <div class="hero-content stagger-container" id="hero-text-container">
+                    <div class="badge stagger-item">
+                        <span class="dot"></span> Open to opportunities
+                    </div>
+                    <p class="hero-eyebrow stagger-item">Software Developer</p>
+                    <h1 class="stagger-item">Nandha Kumar</h1>
+                    <div class="hero-title-dynamic stagger-item">
+                        Building products with <span id="role-text">React &amp; TypeScript</span>
+                    </div>
+                    <p class="hero-lead stagger-item">I design and ship responsive web apps and cross-platform mobile
+                        experiences — React, React Native, TypeScript, PHP, and MySQL — from idea to production.</p>
+
+                    <div class="hero-meta stagger-item">
+                        <span><i class="fa-solid fa-location-dot"></i> Chennai, Tamil Nadu</span>
+                        <span class="meta-sep"></span>
+                        <span><i class="fa-solid fa-briefcase"></i> 2+ years experience</span>
+                    </div>
+
+                    <div class="hero-actions stagger-item">
+                        <a href="#projects" class="btn btn-primary">View projects</a>
+                        <a href="#contact" class="btn btn-secondary">Contact me</a>
+                        <a href="https://github.com/Nandhasv05" target="_blank" rel="noopener noreferrer"
+                            class="btn btn-ghost" aria-label="GitHub">
+                            <i class="fa-brands fa-github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/nandhakumar-s-v-0ab492254/" target="_blank"
+                            rel="noopener noreferrer" class="btn btn-ghost" aria-label="LinkedIn">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                    </div>
+
+                    <div class="hero-tech stagger-item">
+                        <span class="hero-tech-label">Stack</span>
+                        <div class="hero-tech-list">
+                            <span>React</span>
+                            <span>React Native</span>
+                            <span>TypeScript</span>
+                            <span>PHP</span>
+                            <span>MySQL</span>
+                            <span>AWS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-visual intro-reveal-image">
+                    <div class="hero-image-wrapper">
+                        <div class="hero-image-backdrop"></div>
+                        <img src="Assets/profile.jpg" alt="Nandha Kumar — Software Developer" class="hero-image"
+                            id="change-image" width="900" height="1350">
+                        <div class="hero-photo-frame" aria-hidden="true"></div>
+                    </div>
+                    <div class="hero-status-card">
+                        <span class="status-live"></span>
+                        <div>
+                            <strong>Available for work</strong>
+                            <p>Web · Mobile · Freelance</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about">
+            <div class="container">
+                <div class="section-heading-wrapper reveal">
+                    <span class="section-label">01 — About</span>
+                    <h2 class="section-title">Engineer focused on <span>shipping real products</span></h2>
+                    <div class="heading-line"></div>
+                </div>
+
+                <div class="about-bento stagger-container">
+                    <!-- Card 1: Main Bio -->
+                    <div class="bento-card bento-bio stagger-item">
+                        <h3 class="bento-title">Profile</h3>
+                        <p>Software Developer based in Chennai with around 2 years of experience building web and
+                            mobile applications. Primary stack: React, React Native, TypeScript, PHP, and MySQL.
+                        </p>
+                        <p>I build responsive interfaces, integrate REST APIs and payment gateways, work with
+                            databases, and deploy with AWS EC2, S3, Nginx, PM2, Vercel, and Netlify.</p>
+                        <p>I turn business requirements into practical, user-friendly products and keep leveling up
+                            across frontend and backend development.</p>
+                    </div>
+
+                    <!-- Card 2: Visual -->
+                    <div class="bento-card bento-visual stagger-item">
+                        <div class="bento-visual-inner">
+                            <img src="Assets/profile.jpg" alt="Nandha Kumar">
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Experience Stat -->
+                    <div class="bento-card bento-stat stagger-item">
+                        <h3><span class="count-up" data-target="2">2</span>+</h3>
+                        <p>Years Experience</p>
+                    </div>
+
+                    <!-- Card 4: Projects Stat -->
+                    <div class="bento-card bento-stat stagger-item">
+                        <h3><span class="count-up" data-target="10">10</span>+</h3>
+                        <p>Projects Delivered</p>
+                    </div>
+
+                    <!-- Card 5: Focus / Location -->
+                    <div class="bento-card bento-focus stagger-item">
+                        <div class="pulse-container">
+                            <div class="pulse-dot"></div>
+                            <span>Available for Freelance</span>
+                        </div>
+                        <h4>Currently Building</h4>
+                        <p>SaaS products & digital solutions at BuildNexDev</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience & Education Section -->
+        <section id="experience" style="background-color: var(--surface-color);">
+            <div class="container">
+                <div class="section-heading-wrapper reveal">
+                    <span class="section-label">02 — Career</span>
+                    <h2 class="section-title">Experience & <span>Education</span></h2>
+                    <div class="heading-line"></div>
+                </div>
+
+                <div class="timeline-container stagger-container timeline-reveal">
+
+                    <div class="timeline-item stagger-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Aug 2026 – Present</span>
+                            <div class="timeline-header">
+                                <h3 class="timeline-title">Full Stack Developer (Consultant)</h3>
+                                <span class="badge timeline-badge">Current Role</span>
+                            </div>
+                            <h4 class="timeline-subtitle"><a href="https://www.evolvclothing.com/" target="_blank"
+                                    rel="noopener noreferrer"
+                                    style="color: inherit; text-decoration: underline; text-underline-offset: 2px;">Evolv
+                                    Clothing</a></h4>
+
+                            <p class="timeline-description">
+                                Working as a Software Developer, contributing to web applications, digital commerce
+                                platforms,
+                                frontend and backend system integrations, and optimizing application workflows and user
+                                experiences.
+                            </p>
+
+                            <ul class="timeline-list">
+                                <li>Developing and maintaining responsive web applications and digital interfaces.</li>
+                                <li>Building and integrating REST APIs and backend services.</li>
+                                <li>Collaborating on performance optimization, UI enhancements, and feature rollouts.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item stagger-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Jul 2026 – Aug 2026</span>
+                            <h3 class="timeline-title">Software Developer</h3>
+                            <h4 class="timeline-subtitle">Dhanalakshmi Srinivasan Chit Funds (P) Ltd</h4>
+
+                            <p class="timeline-description">
+                                Worked as a Software Developer, developing and maintaining enterprise web applications
+                                using React.js, TypeScript, PHP, and MySQL. Responsible for building CRUD modules,
+                                business agent management, API integration, database optimization, report generation,
+                                and improving application performance. Collaborating with cross-functional teams to
+                                deliver scalable and user-friendly financial software solutions.
+                            </p>
+
+                            <ul class="timeline-list">
+                                <li>Developed responsive web applications using React.js & TypeScript.</li>
+                                <li>Built REST APIs and backend modules using PHP & MySQL.</li>
+                                <li>Implemented Business Agent, RDA, and Customer Management modules.</li>
+                                <li>Optimized SQL queries and improved application performance.</li>
+                                <li>Integrated Excel Import/Export and Report Generation features.</li>
+                                <li>Fixed production issues and enhanced existing applications.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item stagger-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">NOV-2025 – Present</span>
+                            <div class="timeline-header">
+                                <h3 class="timeline-title"> Freelance Developer / Founder</h3>
+                                <span class="badge timeline-badge">Building with BuildNexDev</span>
+                            </div>
+                            <h4 class="timeline-subtitle">BuildNexDev</h4>
+                            <ul class="timeline-desc stagger-container-inner">
+                                <li class="stagger-item">Build web and mobile applications for businesses and
+                                    independent products.</li>
+                                <li class="stagger-item">Handle requirements, frontend development, backend integration,
+                                    database implementation, deployment, and maintenance.</li>
+                                <li class="stagger-item">Work with React, TypeScript, React Native, PHP, MySQL, REST
+                                    APIs, Git, and cloud deployment tools.</li>
+                                <li class="stagger-item">Develop independent SaaS products and practical digital
+                                    solutions under the BuildNexDev brand.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item stagger-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Nov 2024 – Jun 2026</span>
+                            <h3 class="timeline-title">Junior Software Developer</h3>
+                            <h4 class="timeline-subtitle">Kapiital Kapslock | Chennai, India</h4>
+                            <ul class="timeline-desc stagger-container-inner">
+                                <li class="stagger-item">Developed and maintained responsive web applications using
+                                    React and TypeScript.</li>
+                                <li class="stagger-item">Contributed to mobile application development using React
+                                    Native.</li>
+                                <li class="stagger-item">Integrated backend APIs and worked with PHP and MySQL.</li>
+                                <li class="stagger-item">Worked on payment integrations including CCAvenue, Razorpay,
+                                    HDFC QR, and ICICI payment flows.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item stagger-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Jul 2023 &ndash; DEC 2023</span>
+                            <h3 class="timeline-title">Field Service Engineer</h3>
+                            <h4 class="timeline-subtitle">NCR Corporation, Mahindra World City</h4>
+                            <ul class="timeline-desc stagger-container-inner">
+                                <li class="stagger-item">Worked with ATMs, self-check-in kiosks, thermal printers,
+                                    barcode scanners, and restaurant management software.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item stagger-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">2020 – 2024</span>
+                            <h3 class="timeline-title">B.E. Computer Science & Engineering</h3>
+                            <h4 class="timeline-subtitle">Mahendra Institute of Engineering & Technology, Namakkal,
+                                Salem | Anna University Board | CGPA: 7.5/10</h4>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills">
+            <div class="container">
+                <div class="section-heading-wrapper reveal">
+                    <span class="section-label">03 — Expertise</span>
+                    <h2 class="section-title">Technical <span>Skills</span></h2>
+                    <div class="heading-line"></div>
+                </div>
+
+                <div class="skills-grid stagger-container">
+
+                    <div class="skill-category stagger-item">
+                        <h3><i class="fa-solid fa-code"></i> Frontend</h3>
+                        <div class="skill-list stagger-container-inner">
+                            <span class="skill-tag stagger-item"><img src="Assets/react.png" alt="React">
+                                React.js</span>
+                            <span class="skill-tag stagger-item">TypeScript</span>
+                            <span class="skill-tag stagger-item"><img src="Assets/javascript.svg" alt="JS">
+                                JavaScript</span>
+                            <span class="skill-tag stagger-item">Redux</span>
+                            <span class="skill-tag stagger-item"><img src="Assets/html.svg" alt="HTML"> HTML5</span>
+                            <span class="skill-tag stagger-item"><img src="Assets/css.svg" alt="CSS"> CSS3</span>
+                            <span class="skill-tag stagger-item"><img src="Assets/tailwind-css-svgrepo-com.svg"
+                                    alt="Tailwind"> Tailwind CSS</span>
+                            <span class="skill-tag stagger-item"><img src="Assets/bootstrap.svg" alt="Bootstrap">
+                                Bootstrap</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category stagger-item">
+                        <h3><i class="fa-solid fa-mobile-screen"></i> Mobile</h3>
+                        <div class="skill-list stagger-container-inner">
+                            <span class="skill-tag stagger-item"><img src="Assets/react.png" alt="React Native"> React
+                                Native</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category stagger-item">
+                        <h3><i class="fa-solid fa-server"></i> Backend</h3>
+                        <div class="skill-list stagger-container-inner">
+                            <span class="skill-tag stagger-item"><img src="Assets/php-svgrepo-com.svg" alt="PHP">
+                                PHP</span>
+                            <span class="skill-tag stagger-item">Node.js (Learning)</span>
+                            <span class="skill-tag stagger-item">REST APIs</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category stagger-item">
+                        <h3><i class="fa-solid fa-database"></i> Database</h3>
+                        <div class="skill-list stagger-container-inner">
+                            <span class="skill-tag stagger-item"><img src="Assets/mysql.png" alt="MySQL"> MySQL</span>
+                            <span class="skill-tag stagger-item"><img src="Assets/sql.png" alt="SQL"> SQL</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category stagger-item">
+                        <h3><i class="fa-solid fa-cloud"></i> Cloud & Deployment</h3>
+                        <div class="skill-list stagger-container-inner">
+                            <span class="skill-tag stagger-item">AWS EC2</span>
+                            <span class="skill-tag stagger-item">AWS S3</span>
+                            <span class="skill-tag stagger-item">Nginx</span>
+                            <span class="skill-tag stagger-item">PM2</span>
+                            <span class="skill-tag stagger-item">Vercel</span>
+                            <span class="skill-tag stagger-item">Netlify</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category stagger-item">
+                        <h3><i class="fa-solid fa-credit-card"></i> Integrations & Tools</h3>
+                        <div class="skill-list stagger-container-inner">
+                            <span class="skill-tag stagger-item"><i class="fa-brands fa-git-alt"
+                                    style="color: #F1502F;"></i> Git</span>
+                            <span class="skill-tag stagger-item"><i class="fa-brands fa-github"></i> GitHub</span>
+                            <span class="skill-tag stagger-item"><i class="fa-brands fa-bitbucket"
+                                    style="color: #2684FF;"></i> Bitbucket</span>
+                            <span class="skill-tag stagger-item">CCAvenue</span>
+                            <span class="skill-tag stagger-item">Razorpay</span>
+                            <span class="skill-tag stagger-item">HDFC/ICICI QR</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="mentorship" style="background-color: var(--surface-color); padding-bottom: 2rem;">
+            <div class="container">
+                <div class="section-heading-wrapper reveal">
+                    <span class="section-label">04 — Mentorship</span>
+                    <h2 class="section-title">Mentorship <span>Experience</span></h2>
+                    <div class="heading-line"></div>
+                </div>
+
+                <div class="mentorship-card reveal stagger-container">
+                    <div class="mentorship-content">
+                        <div class="mentorship-header stagger-item">
+                            <div>
+                                <h3 class="timeline-title">Software Development Mentor</h3>
+                                <h4 class="timeline-subtitle"
+                                    style="margin-bottom: 0.5rem; color: var(--secondary-accent);">WooUniversity</h4>
+                            </div>
+                            <span class="badge"
+                                style="background-color: rgba(6, 182, 212, 0.1); color: var(--secondary-accent);">Mentorship
+                                Role</span>
+                        </div>
+                        <p class="stagger-item"
+                            style="color: var(--text-secondary); margin-bottom: 1.5rem; max-width: 800px;">
+                            Worked as a mentor, supporting learners with practical software development concepts,
+                            technical guidance, and real-world project understanding.
+                        </p>
+                        <div class="stagger-item">
+                            <a href="https://woouniversity.in/" target="_blank" rel="noopener noreferrer"
+                                class="btn btn-secondary btn-sm">
+                                Visit WooUniversity <i class="fa-solid fa-arrow-right cta-arrow"
+                                    style="margin-left: 0.5rem;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" style="background-color: var(--bg-color);">
+            <div class="container">
+                <div class="section-heading-wrapper reveal">
+                    <span class="section-label">05 — Work</span>
+                    <h2 class="section-title">Selected <span>Projects</span></h2>
+                    <p style="color: var(--text-secondary); margin-top: 1rem; max-width: 600px; margin-inline: auto;">
+                        Production applications I contributed to during my professional role at Kapiital Kapslock, and
+                        selected client and independent development work completed through BuildNexDev.</p>
+                    <div class="heading-line"></div>
+                </div>
+
+                <div class="project-filters reveal">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="professional">Professional Work</button>
+                    <button class="filter-btn" data-filter="freelance">Freelance</button>
+                </div>
+
+                <div class="projects-grid stagger-container" id="projects-container">
+                    <!-- Projects injected via JavaScript -->
+                </div>
+
+                <!-- BuildNexDev Feature Card -->
+                <div class="buildnexdev-feature reveal">
+                    <div class="buildnexdev-content stagger-container">
+                        <h3 class="stagger-item">BuildNexDev</h3>
+                        <h4 class="stagger-item">Independent Freelance Developer / Product Builder</h4>
+                        <p class="stagger-item">BuildNexDev is my independent development brand through which I build
+                            websites, web applications, mobile applications, and digital products for businesses.</p>
+                        <div class="buildnexdev-services stagger-container-inner">
+                            <span class="stagger-item">Business Websites</span>
+                            <span class="stagger-item">Web Applications</span>
+                            <span class="stagger-item">Mobile Applications</span>
+                            <span class="stagger-item">Admin Dashboards</span>
+                            <span class="stagger-item">API Integrations</span>
+                            <span class="stagger-item">Deployment & Maintenance</span>
+                        </div>
+                        <div class="buildnexdev-links stagger-item">
+                            <a href="https://buildnexdev.in/" target="_blank" rel="noopener noreferrer"
+                                class="btn btn-primary"><i class="fa-solid fa-globe"></i> Visit Website</a>
+                            <a href="https://admin.buildnexdev.in/" target="_blank" rel="noopener noreferrer"
+                                class="btn btn-secondary"><i class="fa-solid fa-lock"></i> Internal Admin Platform</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="container">
+                <div class="section-heading-wrapper reveal">
+                    <span class="section-label">06 — Contact</span>
+                    <h2 class="section-title">Let's build <span>something</span></h2>
+                    <div class="heading-line"></div>
+                </div>
+
+                <div class="contact-container stagger-container">
+                    <div class="contact-info stagger-item">
+                        <p>I'm currently open to software development opportunities and selected freelance projects. If
+                            you have a role, project, or collaboration in mind, feel free to reach out.</p>
+
+                        <div class="contact-details stagger-container-inner">
+                            <div class="contact-item stagger-item">
+                                <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                                <div class="contact-text">
+                                    <h4>Email</h4>
+                                    <a href="mailto:nandhakumarsv2002@gmail.com">nandhakumarsv2002@gmail.com</a>
+                                </div>
+                            </div>
+
+                            <div class="contact-item stagger-item">
+                                <div class="contact-icon"><i class="fa-brands fa-linkedin-in"></i></div>
+                                <div class="contact-text">
+                                    <h4>LinkedIn</h4>
+                                    <a href="https://www.linkedin.com/in/nandhakumar-s-v-0ab492254/" target="_blank"
+                                        rel="noopener noreferrer">linkedin.com/in/nandhakumar-s-v-0ab492254</a>
+                                </div>
+                            </div>
+
+                            <div class="contact-item stagger-item">
+                                <div class="contact-icon"><i class="fa-brands fa-instagram"></i></div>
+                                <div class="contact-text">
+                                    <h4>Instagram</h4>
+                                    <a href="https://www.instagram.com/_nandha_sukumarn_/" target="_blank"
+                                        rel="noopener noreferrer">@_nandha_sukumarn_</a>
+                                </div>
+                            </div>
+
+                            <div class="contact-item stagger-item">
+                                <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
+                                <div class="contact-text">
+                                    <h4>Phone</h4>
+                                    <a href="tel:+919790875933">+91 9790875933</a>
+                                </div>
+                            </div>
+
+                            <div class="contact-item stagger-item">
+                                <div class="contact-icon"><i class="fa-solid fa-location-dot"></i></div>
+                                <div class="contact-text">
+                                    <h4>Location</h4>
+                                    <span>Chennai, Tamil Nadu, India</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form class="contact-form stagger-item" id="contact-form" action="https://api.web3forms.com/submit"
+                        method="POST">
+                        <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="John Doe"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control"
+                                placeholder="john@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" class="form-control"
+                                placeholder="Opportunity / Project Inquiry" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" class="form-control"
+                                placeholder="Hello Nandha, I would like to discuss..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-submit" style="width: 100%;">
+                            <span class="btn-text">Send Message</span>
+                            <i class="fa-solid fa-paper-plane btn-icon"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Project Case Study Modal -->
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modal-body">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="container stagger-container">
+            <h2 class="footer-logo stagger-item">Nandha<span class="logo-dot">.</span></h2>
+            <p class="footer-role stagger-item">Software Developer · React · React Native · PHP</p>
+
+            <div class="footer-socials stagger-item">
+                <a href="https://github.com/Nandhasv05" target="_blank" rel="noopener noreferrer"><i
+                        class="fa-brands fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/nandhakumar-s-v-0ab492254/" target="_blank"
+                    rel="noopener noreferrer"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="mailto:nandhakumarsv2002@gmail.com"><i class="fas fa-envelope"></i></a>
+            </div>
+
+            <p class="footer-bottom stagger-item">© <span id="current-year"></span> Nandha Kumar. Built with HTML, CSS,
+                and JS.</p>
+        </div>
+    </footer>
+
+    <!-- ============================================== -->
+    <!-- Nandha Kumar's Personal Portfolio AI Assistant -->
+    <!-- ============================================== -->
+    <!-- Modern Floating AI Launcher Pill -->
+    <button id="ai-chat-launcher" type="button" aria-label="Open Nandha AI Assistant" aria-expanded="false"
+        title="Chat with Nandha AI">
+        <div class="launcher-ai-sparkle">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <div class="launcher-label">
+            <span class="launcher-title">Nandha.AI <span class="launcher-status-ping"></span></span>
+            <span class="launcher-subtitle">Ask anything</span>
+        </div>
+    </button>
+
+    <!-- Next-Gen AI Chat Window -->
+    <div id="ai-chat-window" role="dialog" aria-modal="true" aria-label="Nandha's Portfolio AI Assistant">
+        <!-- Header -->
+        <div class="ai-chat-header">
+            <div class="ai-header-brand">
+                <div class="ai-brand-badge">
+                    <i class="fa-solid fa-sparkles"></i>
+                </div>
+                <div class="ai-brand-meta">
+                    <h3>Nandha.AI <span class="ai-tag-pill">v2.0</span></h3>
+                    <p><span class="ai-live-indicator"></span> Portfolio Intelligence</p>
+                </div>
+            </div>
+            <div class="ai-header-controls">
+                <button type="button" class="ai-control-btn" id="ai-chat-clear" title="Reset chat"
+                    aria-label="Reset chat">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </button>
+                <button type="button" class="ai-control-btn" id="ai-chat-close" title="Close" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="ai-messages-scroll" id="ai-chat-messages" aria-live="polite">
+            <!-- Messages injected dynamically via chatbot.js -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="ai-footer-wrap">
+            <form class="ai-input-box" id="ai-chat-form">
+                <textarea id="ai-chat-input" class="ai-input-control" rows="1"
+                    placeholder="Ask about experience, Evolv Clothing, React, projects..."
+                    autocomplete="off"></textarea>
+                <button type="submit" class="ai-submit-btn" id="ai-chat-send" aria-label="Send message" disabled>
+                    <i class="fa-solid fa-arrow-up"></i>
+                </button>
+            </form>
+            <div class="ai-footer-note">
+                <i class="fa-solid fa-shield-halved"></i> 100% verified portfolio knowledge · Updated for Evolv Clothing
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+    <script src="script.js"></script>
+    <script src="chatbot.js"></script>
+</body>
+
+</html>
