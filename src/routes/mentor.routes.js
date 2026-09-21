@@ -4,7 +4,9 @@ import {
   getMentor,
   createMentor,
   updateMentor,
-  deleteMentor
+  deleteMentor,
+  getMyMentor,
+  updateMyMentor
 } from '../controllers/mentor.controller.js';
 import { requireAuth, requireRole } from '../middleware/auth.js';
 import { mentorFileFields } from '../middleware/upload.js';
@@ -18,6 +20,9 @@ function withFiles(req, res, next) {
     next(err);
   });
 }
+
+router.get('/me', requireAuth, requireRole('admin', 'staff'), getMyMentor);
+router.put('/me', requireAuth, requireRole('staff'), withFiles, updateMyMentor);
 
 router.use(requireAuth, requireRole('admin'));
 router.get('/', listMentors);

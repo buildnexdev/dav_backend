@@ -301,6 +301,66 @@ export async function initDatabase() {
     `);
 
     await conn.query(`
+      CREATE TABLE IF NOT EXISTS study_materials (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        material_code VARCHAR(20) NOT NULL UNIQUE,
+        title VARCHAR(255) NOT NULL,
+        subject VARCHAR(150) DEFAULT NULL,
+        program VARCHAR(100) DEFAULT NULL,
+        batch VARCHAR(50) DEFAULT NULL,
+        description TEXT,
+        file_path VARCHAR(255) DEFAULT NULL,
+        external_url VARCHAR(500) DEFAULT NULL,
+        status ENUM('Active','Inactive') NOT NULL DEFAULT 'Active',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX idx_materials_subject (subject),
+        INDEX idx_materials_status (status)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    `);
+
+    await conn.query(`
+      CREATE TABLE IF NOT EXISTS test_results (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        result_code VARCHAR(20) NOT NULL UNIQUE,
+        student_id INT UNSIGNED NOT NULL,
+        academic_id INT UNSIGNED DEFAULT NULL,
+        title VARCHAR(255) NOT NULL,
+        subject VARCHAR(150) DEFAULT NULL,
+        exam_date DATE DEFAULT NULL,
+        marks DECIMAL(8,2) DEFAULT NULL,
+        max_marks DECIMAL(8,2) DEFAULT 100,
+        percentage DECIMAL(5,2) DEFAULT NULL,
+        rank_no INT DEFAULT NULL,
+        remarks VARCHAR(255) DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        CONSTRAINT fk_results_student FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+        CONSTRAINT fk_results_academic FOREIGN KEY (academic_id) REFERENCES academics(id) ON DELETE SET NULL,
+        INDEX idx_results_student (student_id)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    `);
+
+    await conn.query(`
+      CREATE TABLE IF NOT EXISTS assignment_submissions (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        submission_code VARCHAR(20) NOT NULL UNIQUE,
+        academic_id INT UNSIGNED NOT NULL,
+        student_id INT UNSIGNED NOT NULL,
+        content TEXT,
+        file_path VARCHAR(255) DEFAULT NULL,
+        status ENUM('Submitted','Graded','Returned') NOT NULL DEFAULT 'Submitted',
+        score DECIMAL(8,2) DEFAULT NULL,
+        feedback TEXT,
+        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        CONSTRAINT fk_submissions_academic FOREIGN KEY (academic_id) REFERENCES academics(id) ON DELETE CASCADE,
+        CONSTRAINT fk_submissions_student FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+        UNIQUE KEY uq_submission_academic_student (academic_id, student_id)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    `);
+
+    await conn.query(`
       CREATE TABLE IF NOT EXISTS applications (
         id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         application_code VARCHAR(20) NOT NULL UNIQUE,

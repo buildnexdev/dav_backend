@@ -1,7 +1,7 @@
-import bcrypt from 'bcryptjs';
 import { pool } from '../config/db.js';
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { cleanupTempFiles, saveMentorFiles } from '../middleware/upload.js';
+import { deletePortalUser, upsertPortalUser } from '../services/portalUser.js';
 
 const STATUSES = ['Active', 'Inactive'];
 
@@ -38,6 +38,8 @@ function mapMentor(row) {
     updatedAt: row.updated_at || ''
   };
 }
+
+export { mapMentor };
 
 function duplicateError(err, next) {
   if (err?.code === 'ER_DUP_ENTRY') {
@@ -107,13 +109,54 @@ async function insertMentor(conn, data) {
   return result.insertId;
 }
 
-async function updateMentorRow(id, data) {
+async function updateMentorRow(id, data, conn = pool) {
   const keys = Object.keys(data);
-  await pool.query(
+  await conn.query(
     `UPDATE mentors SET ${keys.map((k) => `\`${k}\` = ?`).join(', ')} WHERE id = ?`,
     [...Object.values(data), id]
   );
 }
+
+export const getMyMentor = asyncHandler(async (req, res) => {
+  const [rows] = await pool.query('SELECT * FROM mentors WHERE user_id = ? LIMIT 1', [req.user.id]);
+  if (!rows.length) {
+    return res.status(404).json({ success: false, error: 'No mentor profile is linked to this login.' });
+  }
+  res.json({ success: true, mentor: mapMentor(rows[0]) });
+});
+
+export const updateMyMentor = asyncHandler(async (req, res, next) => {
+  const [rows] = await pool.query('SELECT * FROM mentors WHERE user_id = ? LIMIT 1', [req.user.id]);
+  if (!rows.length) {
+    cleanupTempFiles(req.files);
+    return res.status(404).json({ success: false, error: 'No mentor profile is linked to this login.' });
+  }
+
+  const existing = rows[0];
+  const mapped = mapMentor(existing);
+  const fields = mentorFields({
+    ...mapped,
+    ...req.body,
+    status: mapped.status
+  });
+  fields.status = existing.status;
+
+  const error = validateMentor(fields);
+  if (error) {
+    cleanupTempFiles(req.files);
+    return res.status(400).json({ success: false, error });
+  }
+
+  try {
+    const filePaths = saveMentorFiles(req.files, existing.mentor_code);
+    await updateMentorRow(existing.id, { ...fields, ...filePaths, user_id: existing.user_id });
+    const [updated] = await pool.query('SELECT * FROM mentors WHERE id = ?', [existing.id]);
+    res.json({ success: true, mentor: mapMentor(updated[0]) });
+  } catch (err) {
+    cleanupTempFiles(req.files);
+    duplicateError(err, next);
+  }
+});
 
 export const listMentors = asyncHandler(async (req, res) => {
   const search = String(req.query.search || '').trim();
@@ -126,6 +169,13 @@ export const listMentors = asyncHandler(async (req, res) => {
   }
   sql += ' ORDER BY id DESC';
   const [rows] = await pool.query(sql, params);
+  res.json({ success: true, mentors: rows.map(mapMentor) });
+});
+
+export const listPublicMentors = asyncHandler(async (_req, res) => {
+  const [rows] = await pool.query(
+    "SELECT * FROM mentors WHERE status = 'Active' ORDER BY id DESC"
+  );
   res.json({ success: true, mentors: rows.map(mapMentor) });
 });
 
@@ -145,26 +195,18 @@ export const createMentor = asyncHandler(async (req, res, next) => {
 
   const username = String(req.body.username || '').trim();
   const password = String(req.body.password || '');
-  if (username && !password) {
-    cleanupTempFiles(req.files);
-    return res.status(400).json({ success: false, error: 'Password is required when creating a mentor login.' });
-  }
 
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
     const mentorCode = emptyToNull(req.body.mentorCode) || (await nextMentorCode(conn));
-    let userId = null;
 
-    if (username) {
-      const passwordHash = await bcrypt.hash(password, 10);
-      const [roleRows] = await conn.query("SELECT id FROM roles WHERE name = 'staff' LIMIT 1");
-      const [userResult] = await conn.query(
-        'INSERT INTO users (username, password_hash, role_id, is_active) VALUES (?, ?, ?, 1)',
-        [username, passwordHash, roleRows[0].id]
-      );
-      userId = userResult.insertId;
-    }
+    const { userId } = await upsertPortalUser(conn, {
+      username,
+      password,
+      roleName: 'staff',
+      existingUserId: null
+    });
 
     const filePaths = saveMentorFiles(req.files, mentorCode);
     const insertId = await insertMentor(conn, {
@@ -180,6 +222,9 @@ export const createMentor = asyncHandler(async (req, res, next) => {
   } catch (err) {
     await conn.rollback();
     cleanupTempFiles(req.files);
+    if (err.status === 400 || err.status === 500) {
+      return res.status(err.status).json({ success: false, error: err.message });
+    }
     duplicateError(err, next);
   } finally {
     conn.release();
@@ -200,22 +245,57 @@ export const updateMentor = asyncHandler(async (req, res, next) => {
     return res.status(400).json({ success: false, error });
   }
 
+  const username = String(req.body.username || '').trim();
+  const password = String(req.body.password || '');
+
+  const conn = await pool.getConnection();
   try {
+    await conn.beginTransaction();
+
+    const { userId } = await upsertPortalUser(conn, {
+      username,
+      password,
+      roleName: 'staff',
+      existingUserId: existing.user_id || null
+    });
+
     const filePaths = saveMentorFiles(req.files, existing.mentor_code);
-    await updateMentorRow(existing.id, { ...fields, ...filePaths });
-    const [rows] = await pool.query('SELECT * FROM mentors WHERE id = ?', [existing.id]);
+    await updateMentorRow(existing.id, { ...fields, ...filePaths, user_id: userId }, conn);
+
+    await conn.commit();
+    const [rows] = await conn.query('SELECT * FROM mentors WHERE id = ?', [existing.id]);
     res.json({ success: true, mentor: mapMentor(rows[0]) });
   } catch (err) {
+    await conn.rollback();
     cleanupTempFiles(req.files);
+    if (err.status === 400 || err.status === 500) {
+      return res.status(err.status).json({ success: false, error: err.message });
+    }
     duplicateError(err, next);
+  } finally {
+    conn.release();
   }
 });
 
-export const deleteMentor = asyncHandler(async (req, res) => {
+export const deleteMentor = asyncHandler(async (req, res, next) => {
   const existing = await findMentor(req.params.id);
   if (!existing) {
     return res.status(404).json({ success: false, error: 'Mentor not found.' });
   }
-  await pool.query('DELETE FROM mentors WHERE id = ?', [existing.id]);
-  res.json({ success: true, message: 'Mentor deleted.' });
+
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+    await conn.query('DELETE FROM mentors WHERE id = ?', [existing.id]);
+    if (existing.user_id) {
+      await deletePortalUser(conn, existing.user_id);
+    }
+    await conn.commit();
+    res.json({ success: true, message: 'Mentor deleted.' });
+  } catch (err) {
+    await conn.rollback();
+    next(err);
+  } finally {
+    conn.release();
+  }
 });

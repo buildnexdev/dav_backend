@@ -1,7 +1,7 @@
-import bcrypt from 'bcryptjs';
 import { pool } from '../config/db.js';
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { cleanupTempFiles, saveStudentFiles } from '../middleware/upload.js';
+import { deletePortalUser, upsertPortalUser } from '../services/portalUser.js';
 
 const STATUSES = ['Active', 'Inactive', 'Graduated'];
 
@@ -202,9 +202,9 @@ async function insertStudent(conn, data) {
   return result.insertId;
 }
 
-async function updateStudentRow(id, data) {
+async function updateStudentRow(id, data, conn = pool) {
   const keys = Object.keys(data);
-  await pool.query(
+  await conn.query(
     `UPDATE students SET ${keys.map((k) => `\`${k}\` = ?`).join(', ')} WHERE id = ?`,
     [...Object.values(data), id]
   );
@@ -253,26 +253,18 @@ export const createStudent = asyncHandler(async (req, res, next) => {
 
   const username = String(req.body.username || '').trim();
   const password = String(req.body.password || '');
-  if (username && !password) {
-    cleanupTempFiles(req.files);
-    return res.status(400).json({ success: false, error: 'Password is required when creating a student login.' });
-  }
 
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
     const studentCode = emptyToNull(req.body.studentCode) || (await nextStudentCode(conn));
-    let userId = null;
 
-    if (username) {
-      const passwordHash = await bcrypt.hash(password, 10);
-      const [roleRows] = await conn.query("SELECT id FROM roles WHERE name = 'student' LIMIT 1");
-      const [userResult] = await conn.query(
-        'INSERT INTO users (username, password_hash, role_id, is_active) VALUES (?, ?, ?, 1)',
-        [username, passwordHash, roleRows[0].id]
-      );
-      userId = userResult.insertId;
-    }
+    const { userId } = await upsertPortalUser(conn, {
+      username,
+      password,
+      roleName: 'student',
+      existingUserId: null
+    });
 
     const filePaths = saveStudentFiles(req.files, studentCode);
     const insertId = await insertStudent(conn, {
@@ -288,6 +280,9 @@ export const createStudent = asyncHandler(async (req, res, next) => {
   } catch (err) {
     await conn.rollback();
     cleanupTempFiles(req.files);
+    if (err.status === 400 || err.status === 500) {
+      return res.status(err.status).json({ success: false, error: err.message });
+    }
     duplicateError(err, next);
   } finally {
     conn.release();
@@ -308,14 +303,35 @@ export const updateStudent = asyncHandler(async (req, res, next) => {
     return res.status(400).json({ success: false, error });
   }
 
+  const username = String(req.body.username || '').trim();
+  const password = String(req.body.password || '');
+
+  const conn = await pool.getConnection();
   try {
+    await conn.beginTransaction();
+
+    const { userId } = await upsertPortalUser(conn, {
+      username,
+      password,
+      roleName: 'student',
+      existingUserId: existing.user_id || null
+    });
+
     const filePaths = saveStudentFiles(req.files, existing.student_code, existing);
-    await updateStudentRow(existing.id, { ...fields, ...filePaths });
-    const [rows] = await pool.query('SELECT * FROM students WHERE id = ?', [existing.id]);
+    await updateStudentRow(existing.id, { ...fields, ...filePaths, user_id: userId }, conn);
+
+    await conn.commit();
+    const [rows] = await conn.query('SELECT * FROM students WHERE id = ?', [existing.id]);
     res.json({ success: true, student: mapStudent(rows[0]) });
   } catch (err) {
+    await conn.rollback();
     cleanupTempFiles(req.files);
+    if (err.status === 400 || err.status === 500) {
+      return res.status(err.status).json({ success: false, error: err.message });
+    }
     duplicateError(err, next);
+  } finally {
+    conn.release();
   }
 });
 
@@ -325,16 +341,64 @@ export const updateMyStudent = asyncHandler(async (req, res, next) => {
     cleanupTempFiles(req.files);
     return res.status(404).json({ success: false, error: 'No student profile is linked to this login.' });
   }
-  req.params.id = String(rows[0].id);
-  return updateStudent(req, res, next);
+
+  const existing = rows[0];
+  const mapped = mapStudent(existing);
+  const fields = studentFields({
+    ...mapped,
+    ...req.body,
+    attendance: mapped.attendance,
+    performance: mapped.performance,
+    scholarship: mapped.scholarship,
+    status: mapped.status,
+    program: mapped.program,
+    batch: mapped.batch
+  });
+
+  // Students cannot change academic/admin-controlled fields
+  fields.attendance = existing.attendance;
+  fields.performance = existing.performance;
+  fields.scholarship = existing.scholarship;
+  fields.status = existing.status;
+  fields.program = existing.program;
+  fields.batch = existing.batch;
+
+  const error = validateStudent(fields);
+  if (error) {
+    cleanupTempFiles(req.files);
+    return res.status(400).json({ success: false, error });
+  }
+
+  try {
+    const filePaths = saveStudentFiles(req.files, existing.student_code);
+    await updateStudentRow(existing.id, { ...fields, ...filePaths, user_id: existing.user_id });
+    const [updated] = await pool.query('SELECT * FROM students WHERE id = ?', [existing.id]);
+    res.json({ success: true, student: mapStudent(updated[0]) });
+  } catch (err) {
+    cleanupTempFiles(req.files);
+    duplicateError(err, next);
+  }
 });
 
-export const deleteStudent = asyncHandler(async (req, res) => {
+export const deleteStudent = asyncHandler(async (req, res, next) => {
   const existing = await findStudent(req.params.id);
   if (!existing) {
     return res.status(404).json({ success: false, error: 'Student not found.' });
   }
 
-  await pool.query('DELETE FROM students WHERE id = ?', [existing.id]);
-  res.json({ success: true, message: 'Student deleted.' });
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+    await conn.query('DELETE FROM students WHERE id = ?', [existing.id]);
+    if (existing.user_id) {
+      await deletePortalUser(conn, existing.user_id);
+    }
+    await conn.commit();
+    res.json({ success: true, message: 'Student deleted.' });
+  } catch (err) {
+    await conn.rollback();
+    next(err);
+  } finally {
+    conn.release();
+  }
 });
