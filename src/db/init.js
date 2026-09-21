@@ -57,17 +57,23 @@ async function ensureColumn(conn, table, column, definition) {
 }
 
 export async function initDatabase() {
-  const root = await mysql.createConnection({
-    host: env.db.host,
-    port: env.db.port,
-    user: env.db.user,
-    password: env.db.password
-  });
-
-  await root.query(
-    `CREATE DATABASE IF NOT EXISTS \`${env.db.name}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
-  );
-  await root.end();
+  try {
+    const admin = await mysql.createConnection({
+      host: env.db.host,
+      port: env.db.port,
+      user: env.db.user,
+      password: env.db.password
+    });
+    await admin.query(
+      `CREATE DATABASE IF NOT EXISTS \`${env.db.name}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
+    );
+    await admin.end();
+  } catch (err) {
+    // Dedicated app users often cannot CREATE DATABASE. The DB must already exist then.
+    if (err.code !== 'ER_DBACCESS_DENIED_ERROR' && err.errno !== 1044) {
+      throw err;
+    }
+  }
 
   const conn = await pool.getConnection();
   try {
@@ -291,6 +297,36 @@ export async function initDatabase() {
         CONSTRAINT fk_payments_student FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE SET NULL,
         INDEX idx_payments_status (status),
         INDEX idx_payments_category (category)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    `);
+
+    await conn.query(`
+      CREATE TABLE IF NOT EXISTS applications (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        application_code VARCHAR(20) NOT NULL UNIQUE,
+        name VARCHAR(150) NOT NULL,
+        dob DATE DEFAULT NULL,
+        gender VARCHAR(20) DEFAULT NULL,
+        phone VARCHAR(20) DEFAULT NULL,
+        email VARCHAR(150) DEFAULT NULL,
+        address VARCHAR(255) DEFAULT NULL,
+        district VARCHAR(100) DEFAULT NULL,
+        state VARCHAR(100) DEFAULT NULL,
+        tenth DECIMAL(5,2) DEFAULT NULL,
+        twelfth DECIMAL(5,2) DEFAULT NULL,
+        degree VARCHAR(150) DEFAULT NULL,
+        university VARCHAR(150) DEFAULT NULL,
+        percentage DECIMAL(5,2) DEFAULT NULL,
+        grad_year INT DEFAULT NULL,
+        program VARCHAR(100) DEFAULT NULL,
+        payment_id INT UNSIGNED DEFAULT NULL,
+        status ENUM('Submitted','Under Review','Documents Verified','Exam Scheduled','Shortlisted','Interview','Selected','Rejected') NOT NULL DEFAULT 'Submitted',
+        remarks VARCHAR(255) DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        CONSTRAINT fk_applications_payment FOREIGN KEY (payment_id) REFERENCES payments(id) ON DELETE SET NULL,
+        INDEX idx_applications_status (status),
+        INDEX idx_applications_email (email)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     `);
 

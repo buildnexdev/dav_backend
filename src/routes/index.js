@@ -15,6 +15,7 @@ import paymentRoutes from './payment.routes.js';
 import dashboardRoutes from './dashboard.routes.js';
 import reportsRoutes from './reports.routes.js';
 import settingsRoutes from './settings.routes.js';
+import applicationRoutes from './application.routes.js';
 import publicRoutes from './public.routes.js';
 
 const router = Router();
@@ -33,6 +34,7 @@ router.use('/payments', paymentRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/reports', reportsRoutes);
 router.use('/settings', settingsRoutes);
+router.use('/applications', applicationRoutes);
 router.use('/public', publicRoutes);
 router.use('/chat', chatRoutes);
 router.use('/contact', contactRoutes);

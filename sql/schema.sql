@@ -239,6 +239,34 @@ CREATE TABLE IF NOT EXISTS payments (
   INDEX idx_payments_category (category)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS applications (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  application_code VARCHAR(20) NOT NULL UNIQUE,
+  name VARCHAR(150) NOT NULL,
+  dob DATE DEFAULT NULL,
+  gender VARCHAR(20) DEFAULT NULL,
+  phone VARCHAR(20) DEFAULT NULL,
+  email VARCHAR(150) DEFAULT NULL,
+  address VARCHAR(255) DEFAULT NULL,
+  district VARCHAR(100) DEFAULT NULL,
+  state VARCHAR(100) DEFAULT NULL,
+  tenth DECIMAL(5,2) DEFAULT NULL,
+  twelfth DECIMAL(5,2) DEFAULT NULL,
+  degree VARCHAR(150) DEFAULT NULL,
+  university VARCHAR(150) DEFAULT NULL,
+  percentage DECIMAL(5,2) DEFAULT NULL,
+  grad_year INT DEFAULT NULL,
+  program VARCHAR(100) DEFAULT NULL,
+  payment_id INT UNSIGNED DEFAULT NULL,
+  status ENUM('Submitted','Under Review','Documents Verified','Exam Scheduled','Shortlisted','Interview','Selected','Rejected') NOT NULL DEFAULT 'Submitted',
+  remarks VARCHAR(255) DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_applications_payment FOREIGN KEY (payment_id) REFERENCES payments(id) ON DELETE SET NULL,
+  INDEX idx_applications_status (status),
+  INDEX idx_applications_email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS settings (
   id TINYINT UNSIGNED PRIMARY KEY,
   student_pages TEXT NOT NULL,
